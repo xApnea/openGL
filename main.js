@@ -24,32 +24,29 @@ function main() {
   //Build a program from those shaders
   var program = createProgram(gl, vertexShader, fragmentShader);
 
-  // must supply data to our program
-  //look up location attribute of program
-
   // Looking up attribute locations (and uniform locations) is something you should do during initialization, not in your render loop.
-
   var positionAttributeLocation = gl.getAttribLocation(program, "a_position")
+  //look up uniform locations
+  var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+  var colorUniformLocation = gl.getUniformLocation(program, "u_color");
+
+
   // make a buffer
   var positionBuffer = gl.createBuffer();
   //make a bind point. works similar to .bind, it binds a resource to one global variable, making it accessible by all other functions.
   // basically...  ARRAY_BUFFER = positionBuffer
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  // this binds our positionbuffer to the ARRAY_BUFFER above
 
-  //pass data into the buffer now that we can access it globally.
-  //3 2D coordinates:
+  //positions in pixels now
   var positions = [
-    0, 0,
-    0, 0.5,
-    0.7, 0,
+    10, 20,
+    80, 20,
+    10, 30,
+    10, 30,
+    80, 20,
+    80, 30,
   ];
-  // ARRAY_BUFFER is just the global variable through which
-  // our earlier declared position buffer is accessed through
 
-  // gl needs strongly typed data, so floats are needed instead of standard arrays
-
-  //STATIC DRAW just tells gl we wont be drawing to this buffer much
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 
@@ -61,10 +58,7 @@ function main() {
   // this converts our clipspace coordinates of -1 to +1 into the right screen size
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Set clear color to black
-  //             R    G    B    Alpha (OPACITY)
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  // clear the color buffer with above color
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   gl.useProgram(program);
@@ -81,16 +75,20 @@ function main() {
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
 
+  // set the resolution
+  gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+  gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
+
+
   // attribute vec4 a_position;
   // a vec4 is a 4 float value:
   // 0,0,0,1 -> default vals
   //a_position = {x: 0, y: 0, z: 0, w: 1}
 
-  //FINALLY DARW THE DAMN TRIANGLE
-
+  //Draw it
   var primitiveType = gl.TRIANGLES;
   var offset = 0;
-  var count = 3; //darw 3 vertices
+  var count = 6; //darw 3 vertices
   gl.drawArrays(primitiveType, offset, count);
 }
 
