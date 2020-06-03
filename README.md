@@ -1,1 +1,1 @@
-# openGL
+# webGL Learner Project
