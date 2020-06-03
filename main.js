@@ -38,16 +38,16 @@ function main() {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   //positions in pixels now
-  var positions = [
-    10, 20,
-    80, 20,
-    10, 30,
-    10, 30,
-    80, 20,
-    80, 30,
-  ];
+  // var positions = [
+  //   10, 20,
+  //   80, 20,
+  //   10, 30,
+  //   10, 30,
+  //   80, 20,
+  //   80, 30,
+  // ];
 
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 
   ///////////////////////////////////////////////////////////////////////////
@@ -85,6 +85,8 @@ function main() {
   // 0,0,0,1 -> default vals
   //a_position = {x: 0, y: 0, z: 0, w: 1}
 
+  setRectangle(gl, randomInt(300), randomInt(300), randomInt(300), randomInt(300));
+
   //Draw it
   var primitiveType = gl.TRIANGLES;
   var offset = 0;
@@ -92,6 +94,24 @@ function main() {
   gl.drawArrays(primitiveType, offset, count);
 }
 
+function setRectangle(gl, x, y, width, height) {
+  var x1 = x;
+  var x2 = x + width;
+  var y1 = y;
+  var y2 = y + height;
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+     x1, y1,
+     x2, y1,
+     x1, y2,
+     x1, y2,
+     x2, y1,
+     x2, y2,
+  ]), gl.STATIC_DRAW);
+}
+
+function randomInt(range) {
+  return Math.floor(Math.random() * range);
+}
 
 
 function createShader(gl, type, source) {
